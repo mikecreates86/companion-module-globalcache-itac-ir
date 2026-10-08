@@ -100,10 +100,10 @@ test('instance connects, sends codes and reports results', async (t) => {
 	assert.equal(instance.feedbacks.lastFailed.callback({ options: { portNum: 'any' } }), false)
 
 	// An invalid code is reported and never reaches the device
-	await instance.actions.portSet.callback({ options: { portNum: '1', ir: '1,38000,1,1,342,171', repeat: 0 } })
+	await instance.actions.portSet.callback({ options: { portNum: '1', ir: '38000,1,1,342,171,21', repeat: 0 } })
 	assert.equal(device.sendirs().length, 1)
 	assert.equal(instance.variables.last_result, 'invalid')
-	assert.match(instance.variables.last_error, /Frequency 1 Hz/)
+	assert.match(instance.variables.last_error, /on\/off pairs/)
 	assert.equal(instance.feedbacks.lastFailed.callback({ options: { portNum: '1' } }), true)
 	assert.equal(instance.feedbacks.lastFailed.callback({ options: { portNum: '2' } }), false)
 

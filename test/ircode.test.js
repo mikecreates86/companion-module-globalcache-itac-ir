@@ -18,6 +18,16 @@ test('strips the sendir header copied from iLearn', () => {
 	assert.equal(formatIrCode(parseIrCode(`SENDIR,1:3,4567,${BODY}`)), BODY)
 })
 
+test('accepts codes from the previous version of the module unchanged', () => {
+	// The format the old help page asked for
+	const legacy = '38580,1,1,346,170,22,64,22,64,22,21,22,21,22,64,22,1520'
+	assert.equal(formatIrCode(parseIrCode(legacy)), legacy)
+})
+
+test('drops a leading ID left over from the sendir header', () => {
+	assert.equal(formatIrCode(parseIrCode(`1,${BODY}`)), BODY)
+})
+
 test('tolerates whitespace, line breaks and a trailing comma', () => {
 	assert.equal(formatIrCode(parseIrCode(` 38000, 1,1,\n342,171,\r\n21,64,21,21,21,1520,\n`)), BODY)
 })
@@ -33,8 +43,7 @@ test('converts learned Pronto hex', () => {
 test('rejects malformed codes with a helpful message', () => {
 	assert.throws(() => parseIrCode(''), IrCodeError)
 	assert.throws(() => parseIrCode('hello'), /numbers separated by commas/)
-	// header partially removed: "1,38000,..." makes the frequency 1
-	assert.throws(() => parseIrCode(`1,${BODY}`), /Frequency 1 Hz/)
+	assert.throws(() => parseIrCode(`1,1,${BODY}`), /Frequency 1 Hz/)
 	assert.throws(() => parseIrCode('38000,1,1,342,171,21'), /on\/off pairs/)
 	assert.throws(() => parseIrCode('38000,1,2,342,171,21,64'), /Offset 2/)
 	assert.throws(() => parseIrCode('38000,99,1,342,171'), /Repeat count 99/)

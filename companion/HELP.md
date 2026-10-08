@@ -27,7 +27,7 @@ Paste the code into the **Send IR code** action. These formats are accepted:
 - The full line from iLearn, including the header: `sendir,1:1,1,38000,1,1,...` (the header is removed automatically)
 - Learned Pronto hex: `0000 006D 0022 0002 ...`
 
-Spaces and line breaks are ignored. Codes are checked before sending, and problems are reported in the log and the `last_error` variable.
+Codes saved with earlier versions of this module keep working. Spaces and line breaks are ignored. Codes are checked before sending, and problems are reported in the log and the `last_error` variable.
 
 **Tip:** To reuse a code on many buttons, store it in a Companion custom variable and enter `$(internal:custom_projector_power)` as the IR code.
 
@@ -63,7 +63,8 @@ The **Status** preset shows the connection state, turns red when a code fails, a
 
 ### Troubleshooting
 
-- **ERR 005 / "Frequency ... out of range"**: part of the `sendir,...` header is still in the code. Paste the whole line from iLearn or only the part starting at the frequency.
+- **"Frequency ... out of range"**: part of the `sendir,...` header is still in the code. Paste the whole line from iLearn or only the part starting at the frequency.
+- **"on/off pairs" or "Offset" errors**: the code was cut off while copying. Copy it again from iLearn.
 - **"Port is busy"**: another controller (an app, a second Companion) is using the port.
 - **Codes are confirmed but the device doesn't react**: check the emitter placement, or try a _Repeat count_ of 2–3.
 - **Wi-Fi (WF2IR) drops out**: increase **Response timeout**.

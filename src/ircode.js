@@ -50,6 +50,12 @@ function parseGlobalCache(text) {
 	}
 
 	const values = body.split(',').map((v) => Number(v))
+
+	// "<id>,<freq>,..." (sendir header only partly removed, or entered that way to
+	// work around older versions of this module): a valid frequency is never
+	// below 15000, so a small first value followed by a valid frequency is an ID
+	if (values.length > 1 && values[0] < LIMITS.minFrequency && isFrequency(values[1])) values.shift()
+
 	if (values.length < 5) throw new IrCodeError('IR code is too short')
 
 	const [frequency, repeat, offset, ...pulses] = values
@@ -78,10 +84,14 @@ function parseProntoHex(text) {
 	return validate({ frequency, repeat: 1, offset, pulses })
 }
 
+function isFrequency(value) {
+	return value >= LIMITS.minFrequency && value <= LIMITS.maxFrequency
+}
+
 function validate(code) {
 	const { frequency, repeat, offset, pulses } = code
 
-	if (frequency < LIMITS.minFrequency || frequency > LIMITS.maxFrequency) {
+	if (!isFrequency(frequency)) {
 		throw new IrCodeError(
 			`Frequency ${frequency} Hz is out of range (${LIMITS.minFrequency}-${LIMITS.maxFrequency}). Is the "sendir,..." header only partially removed?`,
 		)
