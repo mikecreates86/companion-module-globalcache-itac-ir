@@ -1,0 +1,112 @@
+name: Test Package
+
+# Builds an installable module package on every push so there is always a
+# file to download and import into Companion for testing.
+#
+# Each build gets a unique pre-release version (3.0.0-beta.<build number>) so
+# Companion never rejects an import as "already installed", and test builds
+# always sort below the real release they lead up to.
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: test-package-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Build test package
+    # Only for personal forks, never on the upstream Bitfocus repository
+    if: ${{ github.repository_owner != 'bitfocus' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
+
+      - name: Set test version
+        id: version
+        run: |
+          base=$(node -p "require('./package.json').version.split('-')[0]")
+          version="${base}-beta.${GITHUB_RUN_NUMBER}"
+          if [ "${GITHUB_RUN_ATTEMPT}" != "1" ]; then version="${version}.${GITHUB_RUN_ATTEMPT}"; fi
+          npm pkg set version="$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Building $version"
+
+      - name: Build package
+        run: yarn package --prerelease
+
+      - name: Verify package
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          tgz="globalcache-itac-ir-${VERSION}.tgz"
+          test -f "$tgz"
+          mkdir check && tar xzf "$tgz" -C check
+          node -e "
+            const m = require('./check/pkg/companion/manifest.json')
+            if (m.version !== process.env.VERSION) throw new Error('manifest version ' + m.version)
+            if (!m.isPrerelease) throw new Error('not marked as prerelease')
+          "
+          node --check check/pkg/main.js
+
+      - name: Prepare download
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir dist
+          mv "globalcache-itac-ir-${VERSION}.tgz" dist/
+          cat > dist/INSTALL.txt <<EOF
+          Global Cache iTach IR - Companion module test build
+          Version: ${VERSION}
+          Branch:  ${GITHUB_REF_NAME}
+          Commit:  ${GITHUB_SHA}
+
+          To install:
+          1. Open Companion, go to the Modules page and click "Import module package".
+          2. Choose globalcache-itac-ir-${VERSION}.tgz (not this zip).
+          3. In your Global Cache connection, select version ${VERSION}.
+
+          You can switch the connection back to the built-in version at any time.
+          EOF
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: globalcache-itac-ir-${{ steps.version.outputs.version }}
+          path: dist/
+          retention-days: 90
+
+      - name: Publish as latest test build release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          (cd dist && zip -q "../globalcache-itac-ir-${VERSION}.zip" *)
+          gh release delete test-build --cleanup-tag --yes || true
+          gh release create test-build \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Test build ${VERSION} (${GITHUB_REF_NAME})" \
+            --notes "Latest test build from \`${GITHUB_REF_NAME}\` at ${GITHUB_SHA}. Import the .tgz in Companion under Modules > Import module package. Not an official release." \
+            "dist/globalcache-itac-ir-${VERSION}.tgz" \
+            "globalcache-itac-ir-${VERSION}.zip"
