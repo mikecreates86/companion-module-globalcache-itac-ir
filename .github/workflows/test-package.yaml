@@ -44,9 +44,13 @@ jobs:
 
       - name: Set test version
         id: version
+        env:
+          # Builds before this repository existed were published up to beta.2,
+          # so numbering continues from there and never goes backwards
+          BETA_OFFSET: 1
         run: |
           base=$(node -p "require('./package.json').version.split('-')[0]")
-          version="${base}-beta.${GITHUB_RUN_NUMBER}"
+          version="${base}-beta.$((GITHUB_RUN_NUMBER + BETA_OFFSET))"
           if [ "${GITHUB_RUN_ATTEMPT}" != "1" ]; then version="${version}.${GITHUB_RUN_ATTEMPT}"; fi
           npm pkg set version="$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"

@@ -17,7 +17,7 @@ The connection and delivery logic lives in `src/itach.js` and has no Companion d
 
 ## Test builds
 
-Every push builds an installable package (see `.github/workflows/test-package.yaml`). Each build is versioned `<version>-beta.<build number>`, so Companion always accepts it as a new version. Download it from:
+Every push builds an installable package (see `.github/workflows/test-package.yaml`). Each build is versioned `<version>-beta.<n>`, where n increases with every build, so Companion always accepts it as a new version. Download it from:
 
 - **Releases → "Test build"**: always the latest build (`.tgz` and a `.zip` with install notes)
 - **Actions → Test Package → a run → Artifacts**: the build from any specific push, kept for 90 days
