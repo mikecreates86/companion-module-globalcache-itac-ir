@@ -1,0 +1,69 @@
+name: Update latest release in README
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Update latest release section
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          RELEASE_DATE: ${{ github.event.release.published_at }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from datetime import datetime
+          from pathlib import Path
+
+          readme = Path("README.md")
+          contents = readme.read_text(encoding="utf-8")
+          start = "<!-- latest-release:start -->"
+          end = "<!-- latest-release:end -->"
+          if contents.count(start) != 1 or contents.count(end) != 1:
+              raise SystemExit("README.md must contain exactly one latest-release marker pair")
+
+          tag = os.environ["RELEASE_TAG"]
+          for character in "\\`*_{}[]()#+-.!|>":
+              tag = tag.replace(character, "\\" + character)
+          url = os.environ["RELEASE_URL"]
+          if not url.startswith("https://"):
+              raise SystemExit("Release URL must use HTTPS")
+          published = datetime.fromisoformat(os.environ["RELEASE_DATE"].replace("Z", "+00:00"))
+          date = published.date().isoformat()
+          section = f"\n**[{tag}]({url})** - {date} | [Release notes]({url})\n"
+          updated, replacements = re.subn(
+              re.escape(start) + r".*?" + re.escape(end),
+              lambda _: f"{start}{section}{end}",
+              contents,
+              count=1,
+              flags=re.DOTALL,
+          )
+          if replacements != 1:
+              raise SystemExit("Could not update the latest-release section")
+          readme.write_text(updated, encoding="utf-8")
+          PY
+
+      - name: Commit latest release update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --cached --quiet; then
+            echo "README already points to this release."
+            exit 0
+          fi
+          git commit -m "docs: update latest release in README"
+          git push
