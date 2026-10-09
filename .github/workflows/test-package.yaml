@@ -105,12 +105,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          (cd dist && zip -q "../globalcache-itac-ir-${VERSION}.zip" *)
+          # A fixed file name gives the README a download link that never changes
+          cp "dist/globalcache-itac-ir-${VERSION}.tgz" globalcache-itac-ir-latest.tgz
+          cat > notes.md <<EOF
+          **Newest test version: ${VERSION}**
+
+          Download **globalcache-itac-ir-latest.tgz** below, then in Companion go to **Modules**, click **Import module package** and choose the file. In your Global Cache connection, pick version ${VERSION}.
+
+          You can switch back to the built-in version at any time.
+          EOF
           gh release delete test-build --cleanup-tag --yes || true
           gh release create test-build \
             --prerelease \
             --target "$GITHUB_SHA" \
-            --title "Test build ${VERSION} (${GITHUB_REF_NAME})" \
-            --notes "Latest test build from \`${GITHUB_REF_NAME}\` at ${GITHUB_SHA}. Import the .tgz in Companion under Modules > Import module package. Not an official release." \
-            "dist/globalcache-itac-ir-${VERSION}.tgz" \
-            "globalcache-itac-ir-${VERSION}.zip"
+            --title "Latest module download (${VERSION})" \
+            --notes-file notes.md \
+            globalcache-itac-ir-latest.tgz \
+            "dist/globalcache-itac-ir-${VERSION}.tgz"
