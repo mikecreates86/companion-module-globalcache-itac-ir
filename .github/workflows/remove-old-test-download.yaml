@@ -1,7 +1,8 @@
 name: Remove old test download
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [cleanup-old-test-download]
 
 permissions:
   contents: write
