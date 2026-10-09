@@ -3,10 +3,10 @@ name: Update latest release in README
 on:
   release:
     types: [published]
-  # Test builds publish their release with the workflow token, which does not
-  # trigger release events, so also run when a test build finishes
+  # Module builds publish their release with the workflow token, which does
+  # not trigger release events, so also run when a build finishes
   workflow_run:
-    workflows: [Test Package]
+    workflows: [Build module release]
     types: [completed]
 
 permissions:
@@ -22,13 +22,13 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
 
-      - name: Read the newest test build release
+      - name: Read the latest release
         if: ${{ github.event_name == 'workflow_run' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view test-build --repo "$GITHUB_REPOSITORY" --json name,url,publishedAt \
-            --jq '"RELEASE_TAG=" + (.name | capture("\\((?<v>[^)]+)\\)").v // .name) + "\nRELEASE_URL=" + .url + "\nRELEASE_DATE=" + .publishedAt' \
+          gh release view --repo "$GITHUB_REPOSITORY" --json tagName,url,publishedAt \
+            --jq '"RELEASE_TAG=" + .tagName + "\nRELEASE_URL=" + .url + "\nRELEASE_DATE=" + .publishedAt' \
             >> "$GITHUB_ENV"
 
       - name: Use the published release

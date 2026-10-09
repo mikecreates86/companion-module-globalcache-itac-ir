@@ -1,6 +1,6 @@
 # Global Caché iTach IR – Companion module (improved)
 
-## ⬇️ [Download the latest module](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/download/test-build/globalcache-itac-ir-latest.tgz)
+## ⬇️ [Download the latest module](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/latest)
 
 <!-- latest-release:start -->
 **[3\.0\.0\-beta\.5](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/tag/test-build)** - 2026-10-09 | [Release notes](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/tag/test-build)
@@ -10,8 +10,8 @@ This is always the newest working version, ready to import into Companion.
 
 **To install it:**
 1. Click the download link above.
-2. In Companion, go to **Modules** and click **Import module package**.
-3. Choose the file you downloaded.
+2. On the page that opens, under **Assets**, click the file ending in **.tgz** to download it.
+3. In Companion, go to **Modules** and click **Import module package**, then choose that file.
 4. In your Global Cache connection, pick the new version from the version list.
 
 You can switch back to the built-in version at any time.
