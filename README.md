@@ -2,6 +2,10 @@
 
 ## ⬇️ [Download the latest module](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/download/test-build/globalcache-itac-ir-latest.tgz)
 
+<!-- latest-release:start -->
+No releases published yet.
+<!-- latest-release:end -->
+
 This is always the newest working version, ready to import into Companion.
 
 **To install it:**
