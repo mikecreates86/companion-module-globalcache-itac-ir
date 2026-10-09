@@ -3,7 +3,7 @@
 ## ⬇️ [Download the latest module](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/latest)
 
 <!-- latest-release:start -->
-**[3\.0\.0\-beta\.5](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/tag/test-build)** - 2026-10-09 | [Release notes](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/tag/test-build)
+**[v3\.0\.0](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/tag/v3.0.0)** - 2026-10-09 | [Release notes](https://github.com/mikecreates86/companion-module-globalcache-itac-ir/releases/tag/v3.0.0)
 <!-- latest-release:end -->
 
 This is always the newest working version, ready to import into Companion.
