@@ -21,3 +21,9 @@ You can switch back to the built-in version at any time.
 This is an improved version of the Bitfocus Companion module for Global Caché iTach IR interfaces (IP2IR, WF2IR), focused on reliability in live production. It has been submitted to Bitfocus to become the official version.
 
 See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE).
+
+## Sharing status
+
+- **Shared with the Companion community:** the reliability improvements in version 3.0.0, proposed to Bitfocus on Oct 8, 2026 ([#38](https://github.com/bitfocus/companion-module-globalcache-itac-ir/pull/38)). Waiting for review.
+- **Pending:** nothing else yet.
+- **Church-specific only:** nothing. Everything in 3.0.0 is useful to all users.
