@@ -3,6 +3,17 @@
 Running log for whichever tool works on this repo next. Newest entry first.
 Each entry: date, tool, what changed, what is half-finished, what to do next, decisions made.
 
+## 2026-11-19 · Claude Code (second entry)
+- **What changed:** filled in AGENTS.md with Mike's answers: Companion 5.1.3, no problems in
+  services since October, about 10 iTachs with mostly 1 port each. No code changes.
+- **Half-finished:** nothing. The three unused branches are still there (harmless).
+- **Next:** the project is done for now. Only act if (1) Bitfocus replies on PR #38: answer
+  politely and make any requested changes on `reliability-overhaul`, then mirror them to
+  `releases` with a version bump; or (2) Mike reports a problem. Optional, low priority:
+  delete the unused branches; if Bitfocus asks, move to `@companion-module/base` 2.x.
+- **Decisions:** no new features planned. 3.0.0 covers Mike's needs, and adding features now
+  would only enlarge the open PR and make review harder.
+
 ## 2026-11-19 · Claude Code
 - **What changed:** added AGENTS.md (project notes), CLAUDE.md (points to these files) and this log, on `main` only.
 - **Where things stand:** version 3.0.0 is released and is the front-page download. PR #38

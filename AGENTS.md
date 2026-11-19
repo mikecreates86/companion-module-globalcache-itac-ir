@@ -33,7 +33,7 @@
 - `main` still has upstream's 2.0.3 code, which expects Node 18. To check it builds on Node 22:
   `yarn install --frozen-lockfile --ignore-engines`, then `npx companion-module-build`.
 - Run in Companion: Modules > Import module package > choose the .tgz, then pick that version
-  in the Global Cache connection. TODO (Mike): which Companion version(s) do you run?
+  in the Global Cache connection. Mike runs Companion 5.1.3 (confirmed working with 3.0.0).
 
 ## Releasing a new version (what Mike downloads)
 1. Make the change on `reliability-overhaul` if it's for everyone, then bring it into `releases`.
@@ -88,7 +88,7 @@
   update (a dependency bump on 2026-10-30) still merges cleanly with it.
 - Not tested on real hardware: GC-100 and iTach Flex (they should work by setting the module address).
 - Half-built: nothing.
-- Known bugs: none reported. TODO (Mike): anything odd seen in services since October?
-- TODO (Mike): roughly how many iTach units and ports you run and what they control
-  (kept here for context only, never in shared code).
-- TODO (Mike): which features or fixes you want next.
+- Known bugs: none. Mike reported no problems in services from October to 2026-11-19.
+- Mike's setup: about 10 iTachs on the network, mostly 1 port each (one Companion connection
+  per iTach). Context only; never put setup details in shared code.
+- Status: considered done for now. No planned work; see HANDOFF.md for optional follow-ups.
